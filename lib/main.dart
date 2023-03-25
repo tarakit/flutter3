@@ -445,7 +445,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
         drawer: LeftDrawer(),
-        endDrawer: LeftDrawer(),
+
       );
   }
 }
