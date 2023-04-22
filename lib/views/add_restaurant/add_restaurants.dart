@@ -17,6 +17,10 @@ class AddRestaurant extends StatefulWidget {
 class _AddRestaurantState extends State<AddRestaurant> {
   var imageFile;
   var restaurantViewModel = RestaurantViewModel();
+  var imageId;
+  var nameController, categoryController,
+      discountController, deliveryFeeController,
+      deliveryTimeController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +36,7 @@ class _AddRestaurantState extends State<AddRestaurant> {
                 // }
 
                 if(viewModel.image.status == Status.COMPLETE) {
+                  imageId = viewModel.image.data!.id;
                   print('image id ${viewModel.image.data!.id}');
                   print('image url ${viewModel.image.data!.url}');
                 }else if(viewModel.image.status == Status.LOADING){
@@ -63,6 +68,56 @@ class _AddRestaurantState extends State<AddRestaurant> {
                     )
                 );
               }),
+            ),
+            const SizedBox(height: 10,),
+            TextField(
+              controller: nameController,
+              decoration: const InputDecoration(
+                hintText: 'Name',
+                border: OutlineInputBorder(
+                )
+              ),
+            ),
+            const SizedBox(height: 10,),
+            TextField(
+              controller: categoryController,
+              decoration: const InputDecoration(
+                  hintText: 'Category',
+                  border: OutlineInputBorder(
+                  )
+              ),
+            ),
+            const SizedBox(height: 10,),
+            TextField(
+              controller: discountController,
+              decoration: const InputDecoration(
+                  hintText: 'Discount',
+                  border: OutlineInputBorder(
+                  )
+              ),
+            ),
+            const SizedBox(height: 10,),
+            TextField(
+              controller: deliveryFeeController,
+              decoration: const InputDecoration(
+                  hintText: 'Fee',
+                  border: OutlineInputBorder(
+                  )
+              ),
+            ),
+            const SizedBox(height: 10,),
+            TextField(
+              controller: deliveryTimeController,
+              decoration: const InputDecoration(
+                  hintText: 'Time',
+                  border: OutlineInputBorder(
+                  )
+              ),
+            ),
+            const SizedBox(height: 10,),
+            ElevatedButton(
+                onPressed: (){},
+                child: const Text('Save')
             )
           ],
         ),
