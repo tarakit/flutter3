@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:untitled/data/response/status.dart';
+import 'package:untitled/viewmodels/restaurant_viewmodel.dart';
+import 'package:untitled/views/add_restaurant/add_restaurants.dart';
 
 import 'widgets/cuisine_card.dart';
 import 'widgets/left_drawer.dart';
@@ -14,9 +18,17 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  
+  var restaurantViewModel = RestaurantViewModel();
+  
+  @override
+  void initState() {
+    restaurantViewModel.fetchAllRestaurants();
+    super.initState();
+  }
+  
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -35,7 +47,11 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
         actions: [
-          IconButton(onPressed: () {}, icon: Icon(Icons.favorite)),
+          IconButton(onPressed: () {
+            Navigator.push(context, MaterialPageRoute(
+                builder: (ctx) => AddRestaurant()));
+
+          }, icon: Icon(Icons.favorite)),
           IconButton(onPressed: () {}, icon: Icon(Icons.shopping_basket)),
         ],
       ),
@@ -215,7 +231,7 @@ class _MyHomePageState extends State<MyHomePage> {
             const SliverToBoxAdapter(
               child: Padding(
                 padding: EdgeInsets.only(left: 15, top: 10),
-                child: Text('Your Restuarants',
+                child: Text('Your Restaurants',
                   style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold
@@ -223,14 +239,30 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             SliverToBoxAdapter(
-                child: SizedBox(
-                  height: 258,
-                  child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: 10,
-                      itemBuilder: (builder, index){
-                        return ShopCard(shopName: 'KOI 00$index');
+                child: ChangeNotifierProvider<RestaurantViewModel>(
+                  create: (context) => restaurantViewModel,
+                  child: Consumer<RestaurantViewModel>(
+                    builder: (create, value, _) {
+                      switch(value.restaurants.status){
+                        case Status.LOADING: 
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        case Status.COMPLETE:
+                          return SizedBox(
+                            height: 275,
+                            child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount:  value.restaurants.data!.data.length,
+                                itemBuilder: (builder, index){
+                                  return ShopCard(data: value.restaurants.data!.data[index]);
+                                }
+                            ),
+                          );
+                        default: return const CircularProgressIndicator();
                       }
+                    }
+                    
                   ),
                 )
             ),

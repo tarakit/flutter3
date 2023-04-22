@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:untitled/models/response/restaurant.dart';
 
 class ShopCard extends StatelessWidget {
   ShopCard({
     super.key,
-    this.shopName
+    required this.data
   });
 
-  var shopName;
+  RestaurantData data;
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +26,12 @@ class ShopCard extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: const BorderRadius.all(Radius.circular(15)),
-                child: Image.network('https://d1sag4ddilekf6.azureedge.net/compressed/merchants/1-CYMHUGBVTUKAGN/hero/9460263fa5c945e08e7830c2b1c53367_1642690004885397679.jpg',
-                // child: Image.net,
+                child: SizedBox(
+                  height: 190,
+                  child: Image.network(
+                    'https://cms.istad.co${data.attributes.picture.data.attributes.url}',
+                  // child: Image.net,
+                  ),
                 ),
               ),
               Positioned(
@@ -39,19 +44,19 @@ class ShopCard extends StatelessWidget {
                   child: Container(
                     color: Colors.pink,
                     padding: const EdgeInsets.all(5),
-                    child: const Text('13% OFF Min 2\$'),
+                    child: Text('${data.attributes.discount}% OFF Min 2\$'),
                   ),
                 ),
               )
             ],
           ),
           const SizedBox(height: 10),
-          Text('$shopName', style: const TextStyle(
+          Text(data.attributes.name, style: const TextStyle(
               fontWeight: FontWeight.bold),),
           const SizedBox(height: 5),
-          Text('\$\$\$ Beverage, Milk Tea'),
+          Text('\$\$\$ ${data.attributes.category}'),
           const SizedBox(height: 5),
-          Text('\$ delivery fee 0.71', style: TextStyle(
+          Text('\$ delivery fee ${data.attributes.deliveryFee}', style: const TextStyle(
               fontWeight: FontWeight.bold))
         ],
       ),
