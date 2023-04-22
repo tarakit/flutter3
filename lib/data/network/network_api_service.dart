@@ -8,6 +8,26 @@ import '../../models/response/image.dart';
 class NetworkApiService {
   dynamic responseJson;
 
+  Future postApi(String url, requestBody) async{
+    var headers = {
+      'Content-Type': 'application/json'
+    };
+    var request = http.Request('POST', Uri.parse(url));
+    request.body = json.encode(requestBody);
+    request.headers.addAll(headers);
+
+    var response = await request.send();
+
+    if (response.statusCode == 200) {
+      print(await response.stream.bytesToString());
+      return true;
+    }
+    else {
+      return false;
+    }
+
+  }
+
   Future uploadImage(String url, file) async {
     var request = http.MultipartRequest('POST', Uri.parse(url));
     request.files.add(await http.MultipartFile.fromPath('files', file));

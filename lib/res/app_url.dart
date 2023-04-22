@@ -4,4 +4,6 @@ class AppUrl {
   static var allShops = '$baseUrl/food-panda-shops';
   static var allCuisines = '$baseUrl/food-panda-cuisines?populate=*';
   static var uploadImage = '$baseUrl/upload';
+
+  static var postRestaurant = '$baseUrl/food-panda-restaurants';
 }

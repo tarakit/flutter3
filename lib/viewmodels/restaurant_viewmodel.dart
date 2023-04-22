@@ -29,8 +29,13 @@ class RestaurantViewModel extends ChangeNotifier{
         .onError((error, stackTrace) => setImageResponse(ApiResponse.error(error.toString())));
   }
 
+  Future<dynamic> postRestaurant(requestBody) async{
+    await _restaurantRepository.postRestaurant(requestBody)
+        .then((value) => setRestaurantList(ApiResponse.completed(value)))
+        .onError((error, stackTrace) => setRestaurantList(ApiResponse.error(error.toString())));
+  }
+
   setRestaurantList(response){
-    print(response.toString());
     restaurants = response;
     notifyListeners();
   }

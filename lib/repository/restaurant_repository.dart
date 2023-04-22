@@ -1,4 +1,5 @@
 import 'package:untitled/data/network/Network_api_service.dart';
+import 'package:untitled/models/request/restaurant_request.dart';
 import 'package:untitled/models/response/image.dart';
 import 'package:untitled/res/app_url.dart';
 
@@ -20,6 +21,17 @@ class RestaurantRepository{
   Future<ImageModel> uploadImage(file) async{
     try{
         dynamic response = await _apiService.uploadImage(AppUrl.uploadImage, file);
+        return response;
+    }catch(e){
+      rethrow;
+    }
+  }
+
+  Future<dynamic> postRestaurant(requestBody) async{
+    try{
+        var restaurantBody = RestaurantRequest(data: requestBody);
+        dynamic response = await _apiService.postApi(AppUrl.postRestaurant,
+                                                        restaurantBody.toJson());
         return response;
     }catch(e){
       rethrow;

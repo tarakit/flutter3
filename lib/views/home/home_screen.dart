@@ -255,7 +255,17 @@ class _MyHomePageState extends State<MyHomePage> {
                                 scrollDirection: Axis.horizontal,
                                 itemCount:  value.restaurants.data!.data.length,
                                 itemBuilder: (builder, index){
-                                  return ShopCard(data: value.restaurants.data!.data[index]);
+                                  print('index = $index ${value.restaurants.data!.data[index].attributes.picture.data}');
+                                  // if(value.restaurants.data!.data[index].attributes.picture.data == null){
+                                  //   print('null at $index');
+                                  // }else {
+                                  //   return ShopCard(
+                                  //       data: value.restaurants.data!
+                                  //           .data[index]);
+                                  // }
+                                  return ShopCard(
+                                            data: value.restaurants.data!
+                                                .data[index]);
                                 }
                             ),
                           );
