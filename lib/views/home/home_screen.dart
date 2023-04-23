@@ -49,7 +49,7 @@ class _MyHomePageState extends State<MyHomePage> {
         actions: [
           IconButton(onPressed: () {
             Navigator.push(context, MaterialPageRoute(
-                builder: (ctx) => AddRestaurant()));
+                builder: (ctx) => AddRestaurant(isUpdate: false)));
 
           }, icon: Icon(Icons.favorite)),
           IconButton(onPressed: () {}, icon: Icon(Icons.shopping_basket)),
@@ -257,7 +257,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 itemBuilder: (builder, index){
                                   print('index = $index ${value.restaurants.data!.data[index].attributes.picture.data}');
                                   // if(value.restaurants.data!.data[index].attributes.picture.data == null){
-                                  //   print('null at $index');
+                                  //   print('null aat $index');
                                   // }else {
                                   //   return ShopCard(
                                   //       data: value.restaurants.data!

@@ -10,8 +10,8 @@ class RestaurantViewModel extends ChangeNotifier{
 
   final _restaurantRepository = RestaurantRepository();
 
-  ApiResponse<Restaurant> restaurants = ApiResponse.loading();
-  ApiResponse<ImageModel> image = ApiResponse();
+  dynamic restaurants = ApiResponse.loading();
+  dynamic image = ApiResponse();
 
   setImageResponse(response){
     if(response.data == null) {
@@ -35,6 +35,12 @@ class RestaurantViewModel extends ChangeNotifier{
         .onError((error, stackTrace) => setRestaurantList(ApiResponse.error(error.toString())));
   }
 
+  Future<dynamic> putRestaurant(requestBody, id) async{
+    await _restaurantRepository.putRestaurant(requestBody, id)
+        .then((value) => setRestaurantList(ApiResponse.completed(value)))
+        .onError((error, stackTrace) => setRestaurantList(ApiResponse.error(error.toString())));
+  }
+
   setRestaurantList(response){
     restaurants = response;
     notifyListeners();
@@ -49,5 +55,9 @@ class RestaurantViewModel extends ChangeNotifier{
         .onError((error, stackTrace) {
           setRestaurantList(ApiResponse.error(error.toString()));
         });
+  }
+
+  Future<dynamic> deleteRestaurant(id) async{
+    await _restaurantRepository.deleteRestaurant(id);
   }
 }

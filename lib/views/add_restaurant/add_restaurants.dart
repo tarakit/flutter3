@@ -9,7 +9,9 @@ import 'package:untitled/viewmodels/restaurant_viewmodel.dart';
 import '../../data/response/status.dart';
 
 class AddRestaurant extends StatefulWidget {
-  const AddRestaurant({Key? key}) : super(key: key);
+  AddRestaurant({Key? key, this.data, this.isUpdate}) : super(key: key);
+  dynamic data;
+  bool? isUpdate;
 
   @override
   State<AddRestaurant> createState() => _AddRestaurantState();
@@ -24,6 +26,19 @@ class _AddRestaurantState extends State<AddRestaurant> {
   var discountController  = TextEditingController();
   var deliveryFeeController = TextEditingController();
   var deliveryTimeController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    if(widget.isUpdate!){
+      nameController.text = widget.data.attributes.name;
+      categoryController.text = widget.data.attributes.category;
+      deliveryTimeController.text = widget.data.attributes.deliveryTime.toString();
+      deliveryFeeController.text = widget.data.attributes.deliveryFee.toString();
+      discountController.text = widget.data.attributes.discount.toString();
+      imageId = widget.data.attributes.picture.data.id;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +68,11 @@ class _AddRestaurantState extends State<AddRestaurant> {
                           ? SizedBox(
                             width: 300,
                             height: 250,
-                            child: Image.network(
+                            child: widget.isUpdate! ?
+                             Image.network(
+                               'https://cms.istad.co${widget.data.attributes.picture.data.attributes.url}'
+                             )
+                            : Image.network(
                                 'https://www.onlylondon.properties/application/modules/themes/views/default/assets/images/image-placeholder.png',
                                 width: 300,
                                 height: 250,
@@ -118,16 +137,17 @@ class _AddRestaurantState extends State<AddRestaurant> {
                 create: (context) => restaurantViewModel,
                 child: Consumer<RestaurantViewModel>(
                   builder: (context, viewModel, _) {
-
                     if(viewModel.restaurants.status == Status.COMPLETE){
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Post Success')));
+                      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Post Success')));
+                      });
                     }
-
                     return ElevatedButton(
                       onPressed: (){
-                        postRestaurant();
+                        postRestaurant(widget.isUpdate!);
                       },
-                      child: const Text('Save')
+                      child: widget.isUpdate! ? const Text('Update') : const Text('Save')
                   );}
                 ),
               )
@@ -151,15 +171,22 @@ class _AddRestaurantState extends State<AddRestaurant> {
     }
   }
 
-  void postRestaurant() {
+  void postRestaurant(isUpdate) {
+    print('image id :: $imageId');
     var requestBody = Data(
       name: nameController.text,
       category: categoryController.text,
       discount: int.parse(discountController.text),
-      deliveryFee: int.parse(deliveryFeeController.text),
+      deliveryFee: double.parse(deliveryFeeController.text),
       deliveryTime: int.parse(deliveryTimeController.text),
       picture: imageId.toString()
     );
-    restaurantViewModel.postRestaurant(requestBody);
+    if(isUpdate){
+      restaurantViewModel.putRestaurant(requestBody, widget.data.id);
+    }else{
+      restaurantViewModel.postRestaurant(requestBody);
+    }
+
+    restaurantViewModel.deleteRestaurant(widget.data.id);
   }
 }

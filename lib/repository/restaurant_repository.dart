@@ -38,6 +38,29 @@ class RestaurantRepository{
     }
   }
 
+  Future<dynamic> putRestaurant(requestBody, id) async{
+    try{
+      var restaurantBody = RestaurantRequest(data: requestBody);
+      var url = '${AppUrl.postRestaurant}/$id';
+      dynamic response = await _apiService.putApi(url, restaurantBody.toJson());
+      return response;
+    }catch(e){
+      rethrow;
+    }
+  }
+
+  Future<dynamic> deleteRestaurant(id) async{
+    try{
+      var url = '${AppUrl.postRestaurant}/$id';
+      https://cms.istad.co/api/food-panda-restaurants/49
+
+      dynamic response = await _apiService.deleteApi(url);
+      return response;
+    }catch(e){
+      rethrow;
+    }
+  }
+
   // Future<Shop> getShop() async {
   //   try {
   //     dynamic response = await _apiService.getApiResponse(

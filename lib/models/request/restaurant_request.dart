@@ -37,7 +37,7 @@ class Data {
   String name;
   String category;
   int discount;
-  int deliveryFee;
+  double deliveryFee;
   int deliveryTime;
   String picture;
 
