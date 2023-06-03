@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:untitled/models/response/restaurant.dart';
+import 'package:untitled/viewmodels/restaurant_viewmodel.dart';
 import 'package:untitled/views/add_restaurant/add_restaurants.dart';
+
+import '../../../data/response/status.dart';
 
 class ShopCard extends StatelessWidget {
   ShopCard({
@@ -9,10 +13,48 @@ class ShopCard extends StatelessWidget {
   });
 
   RestaurantData data;
+  var restaurantViewModel = RestaurantViewModel();
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
+      onDoubleTap: (){
+        showDialog(context: context,
+            builder: (context) => AlertDialog(
+              title: const Text('Are you sure to remove?'),
+              content: const Text('After you remove, it can not revert back'),
+              actions: [
+                TextButton(
+                    onPressed: (){
+                      Navigator.pop(context);
+                    },
+                    child: const Text('No')),
+                TextButton(
+                    onPressed: (){
+                      restaurantViewModel.deleteRestaurant(data.id);
+                    },
+                    child: ChangeNotifierProvider(
+                      create: (context) => restaurantViewModel,
+                      child: Consumer<RestaurantViewModel>(
+                          builder: (context, viewModel, _) {
+                            if(viewModel.restaurants.status == Status.COMPLETE){
+                              WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text('Item Removed !!'))
+                                );
+                              });
+                              Navigator.pop(context);
+                            }
+
+                            return viewModel.restaurants.status == Status.LOADING ?
+                            const CircularProgressIndicator() :
+                            const Text('Ok');
+                          }),
+                    )
+                )
+              ])
+        );
+      },
       onTap: (){
         Navigator.push(
             context,

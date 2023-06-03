@@ -4,13 +4,12 @@ import 'package:untitled/models/response/image.dart';
 import 'package:untitled/repository/restaurant_repository.dart';
 
 import '../data/response/status.dart';
-import '../models/response/restaurant.dart';
 
 class RestaurantViewModel extends ChangeNotifier{
 
   final _restaurantRepository = RestaurantRepository();
 
-  dynamic restaurants = ApiResponse.loading();
+  dynamic restaurants = ApiResponse();
   dynamic image = ApiResponse();
 
   setImageResponse(response){
@@ -30,12 +29,14 @@ class RestaurantViewModel extends ChangeNotifier{
   }
 
   Future<dynamic> postRestaurant(requestBody) async{
+    setRestaurantList(ApiResponse.loading());
     await _restaurantRepository.postRestaurant(requestBody)
         .then((value) => setRestaurantList(ApiResponse.completed(value)))
         .onError((error, stackTrace) => setRestaurantList(ApiResponse.error(error.toString())));
   }
 
   Future<dynamic> putRestaurant(requestBody, id) async{
+    setRestaurantList(ApiResponse.loading());
     await _restaurantRepository.putRestaurant(requestBody, id)
         .then((value) => setRestaurantList(ApiResponse.completed(value)))
         .onError((error, stackTrace) => setRestaurantList(ApiResponse.error(error.toString())));
@@ -47,6 +48,7 @@ class RestaurantViewModel extends ChangeNotifier{
   }
 
   Future<dynamic> fetchAllRestaurants() async{
+    setRestaurantList(ApiResponse.loading());
     await _restaurantRepository.getRestaurants()
         .then((res) {
           setRestaurantList(ApiResponse.completed(res));
@@ -58,6 +60,14 @@ class RestaurantViewModel extends ChangeNotifier{
   }
 
   Future<dynamic> deleteRestaurant(id) async{
-    await _restaurantRepository.deleteRestaurant(id);
+    setRestaurantList(ApiResponse.loading());
+    await _restaurantRepository.deleteRestaurant(id)
+        .then((res) {
+      setRestaurantList(ApiResponse.completed(res));
+    }
+    )
+        .onError((error, stackTrace) {
+      setRestaurantList(ApiResponse.error(error.toString()));
+    });
   }
 }

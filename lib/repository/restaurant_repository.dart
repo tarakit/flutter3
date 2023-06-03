@@ -11,6 +11,7 @@ class RestaurantRepository{
 
   Future<Restaurant> getRestaurants() async {
     try{
+
       dynamic response = await _apiService.getApiResponse(AppUrl.allRestaurants);
       return response = Restaurant.fromJson(response);
     }catch(e){
@@ -52,7 +53,6 @@ class RestaurantRepository{
   Future<dynamic> deleteRestaurant(id) async{
     try{
       var url = '${AppUrl.postRestaurant}/$id';
-      https://cms.istad.co/api/food-panda-restaurants/49
 
       dynamic response = await _apiService.deleteApi(url);
       return response;

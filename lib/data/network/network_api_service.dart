@@ -12,14 +12,17 @@ class NetworkApiService {
     var headers = {'Content-Type': 'application/json'};
 
     var request = http.Request('POST', Uri.parse(url));
-
+  // {
+  //   "id": 12,
+  //   "name" : 'new name'
+  // }
     request.body = json.encode(requestBody);
     request.headers.addAll(headers);
 
     var response = await request.send();
-    print('statusu ${response.statusCode}');
+    // print('statusu ${response.statusCode}');
     if (response.statusCode == 200) {
-      print(await response.stream.bytesToString());
+      // print(await response.stream.bytesToString());
       return true;
     } else {
       print(response.reasonPhrase);
@@ -36,9 +39,10 @@ class NetworkApiService {
     var response = await request.send();
 
     if (response.statusCode == 200) {
-      print(await response.stream.bytesToString());
+      // print(await response.stream.bytesToString());
       return true;
     } else {
+      // print(response.reasonPhrase);
       return false;
     }
   }
@@ -74,9 +78,11 @@ class NetworkApiService {
     var response = await request.send();
 
     if (response.statusCode == 200) {
-      print(await response.stream.bytesToString());
+      // print(await response.stream.bytesToString());
+      return true;
     } else {
-      print(response.reasonPhrase);
+      // print(response.reasonPhrase);
+      return false;
     }
   }
 }

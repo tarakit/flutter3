@@ -186,7 +186,5 @@ class _AddRestaurantState extends State<AddRestaurant> {
     }else{
       restaurantViewModel.postRestaurant(requestBody);
     }
-
-    restaurantViewModel.deleteRestaurant(widget.data.id);
   }
 }
