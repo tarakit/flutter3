@@ -264,7 +264,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                   //           .data[index]);
                                   // }
                                   return ShopCard(
-                                            data: value.restaurants.data!
+                                            restaurant: value.restaurants.data!
                                                 .data[index]);
                                 }
                             ),
@@ -331,29 +331,31 @@ class _MyHomePageState extends State<MyHomePage> {
             SliverToBoxAdapter(
               child: Container(
                 margin: const EdgeInsets.all(15),
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.only(left: 15, right: 15),
+                width: double.infinity,
                 decoration: BoxDecoration(
-                    border: Border.all(width: 1,
-                        color: Colors.grey),
-                    borderRadius: const BorderRadius.all(Radius.circular(15))
+                    borderRadius: BorderRadius.circular(15),
+                    border: Border.all(width: 1, color: Colors.black12)
                 ),
-                child: Card(
-                  elevation: 0,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
-                            Text('Become a pro', style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),
-                            Text('and get exclusive deals')
-                          ]
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Become a pro',
+                          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
+                        Text('get exclusive deals')
+                      ],
+                    ),
+                    Transform.rotate(
+                      angle: -0.1,
+                      child: Image.network('https://malaysiafreebies.com/wp-content/uploads/2022/01/image001-767x483.png',
+                        width: 110,
+                        height: 90,
                       ),
-                      SizedBox(
-                          height: 70,
-                          child: Image.asset('assets/images/burger.png'))
-                    ],
-                  ),
+                    )
+                  ],
                 ),
               ),
             )

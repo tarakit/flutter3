@@ -1,112 +1,116 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:untitled/models/response/restaurant.dart';
-import 'package:untitled/viewmodels/restaurant_viewmodel.dart';
-import 'package:untitled/views/add_restaurant/add_restaurants.dart';
-
 import '../../../data/response/status.dart';
+import '../../../viewmodels/restaurant_viewmodel.dart';
+import '../../add_restaurant/add_restaurants.dart';
 
 class ShopCard extends StatelessWidget {
   ShopCard({
     super.key,
-    required this.data
+    this.restaurant
   });
 
-  RestaurantData data;
+  var restaurant;
   var restaurantViewModel = RestaurantViewModel();
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onDoubleTap: (){
-        showDialog(context: context,
+        showDialog(
+            context: context,
             builder: (context) => AlertDialog(
               title: const Text('Are you sure to remove?'),
-              content: const Text('After you remove, it can not revert back'),
               actions: [
-                TextButton(
-                    onPressed: (){
-                      Navigator.pop(context);
-                    },
-                    child: const Text('No')),
-                TextButton(
-                    onPressed: (){
-                      restaurantViewModel.deleteRestaurant(data.id);
-                    },
-                    child: ChangeNotifierProvider(
-                      create: (context) => restaurantViewModel,
-                      child: Consumer<RestaurantViewModel>(
-                          builder: (context, viewModel, _) {
-                            if(viewModel.restaurants.status == Status.COMPLETE){
-                              WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text('Item Removed !!'))
-                                );
-                              });
-                              Navigator.pop(context);
-                            }
-
-                            return viewModel.restaurants.status == Status.LOADING ?
+                TextButton(onPressed: (){
+                  Navigator.pop(context);
+                }, child: const Text('No')),
+                ChangeNotifierProvider.value(
+                  value: restaurantViewModel,
+                  child: Consumer<RestaurantViewModel>(
+                      builder: (context, viewModel, _) {
+                        return TextButton(onPressed: (){
+                          restaurantViewModel.deleteRestaurant(restaurant.id);
+                        },
+                            child:  viewModel.restaurants.status == Status.LOADING ?
                             const CircularProgressIndicator() :
-                            const Text('Ok');
-                          }),
-                    )
-                )
-              ])
+                            const Text('Yes')
+                        );
+                      }
+                  ),
+                ),
+              ],
+            )
         );
       },
       onTap: (){
-        Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => AddRestaurant(data: data, isUpdate: true)));
+        Navigator.push(context, MaterialPageRoute(
+            builder: (context)=> AddRestaurant(isUpdate: true)
+        ));
       },
       child: Container(
-        margin: const EdgeInsets.only(
-          top: 10,
-          left: 5,
-          right: 5,
-          bottom: 5
-        ),
-        width: MediaQuery.of(context).size.width * .75,
+        // width: MediaQuery.of(context).size.width * 0.75,
+        padding: EdgeInsets.all(15),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Stack(
               children: [
-                ClipRRect(
-                  borderRadius: const BorderRadius.all(Radius.circular(15)),
-                  child: SizedBox(
-                    height: 190,
-                    child: Image.network(
-                      'https://cms.istad.co${data.attributes.picture.data.attributes.url}',
-                    // child: Image.net,
-                    ),
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.75,
+                  height: 180,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(15),
+                    child:
+                    restaurant!.attributes.picture.data != null
+                        || restaurant!.attributes.picture != null
+                        ?
+                    Image.network(
+                      'https://cms.istad.co${restaurant!.attributes.picture.data.attributes.url}',
+                      fit: BoxFit.cover,
+                    ) : Image.network(
+                        'https://cdn.onlinewebfonts.com/svg/img_148071.png',
+                        height: 250,
+                        width: 300),
                   ),
                 ),
                 Positioned(
                   top: 15,
-                  child: ClipRRect(
-                    borderRadius: const BorderRadius.only(
-                        topRight: Radius.circular(8),
-                        bottomRight: Radius.circular(8)
+                  child: Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: const BoxDecoration(
+                        color: Colors.pink,
+                        borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(10),
+                            bottomRight: Radius.circular(10)
+                        )
                     ),
-                    child: Container(
-                      color: Colors.pink,
-                      padding: const EdgeInsets.all(5),
-                      child: Text('${data.attributes.discount}% OFF Min 2\$'),
+                    child: Text('${restaurant!.attributes.discount} OFF Min 12 (Code:13)',
+                      style: TextStyle(color: Colors.white),),
+                  ),
+                ),
+                Positioned(
+                  bottom: 15,
+                  left: 15,
+                  child: Container(
+                    padding: const EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(13)
                     ),
+                    child: Text('${restaurant!.attributes.deliveryTime}mn'),
                   ),
                 )
               ],
             ),
             const SizedBox(height: 10),
-            Text(data.attributes.name, style: const TextStyle(
-                fontWeight: FontWeight.bold),),
-            const SizedBox(height: 5),
-            Text('\$\$\$ ${data.attributes.category}'),
-            const SizedBox(height: 5),
-            Text('\$ delivery fee ${data.attributes.deliveryFee}', style: const TextStyle(
-                fontWeight: FontWeight.bold))
+            Text(restaurant!.attributes.name),
+            // const SizedBox(height: 2),
+            Text('\$\$\$ ${restaurant!.attributes.category}',
+              style: const TextStyle(color: Colors.grey),
+            ),
+            // const SizedBox(height: 2),
+            Text('\$ ${restaurant!.attributes.deliveryFee}'),
           ],
         ),
       ),
